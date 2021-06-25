@@ -1,0 +1,37 @@
+~/Uninterrupted-supply$ sqlite3 data.db
+SQLite version 3.22.0 2018-01-22 18:45:57
+Enter ".help" for usage hints.
+sqlite> create table purveyor (
+   ...> id integer primary key,
+   ...> name text not null,
+   ...> price real,
+   ...> time text,
+   ...> x real,
+   ...> y real);
+sqlite> show tables
+   ...> ;
+Error: near "show": syntax error
+sqlite> ?
+   ...> 
+   ...> ^C
+   ...> ;
+Error: near "?": syntax error
+sqlite> help;
+Error: near "help": syntax error
+sqlite> help
+   ...> ;
+Error: near "help": syntax error
+sqlite> .tables
+purveyor
+sqlite> create table purveyance (
+   ...> id integer primary key,
+   ...> weight real not null,
+   ...> shipment text,
+   ...> arrival text,
+   ...> 
+   ...> production text,
+   ...> type text,
+   ...> id_purveyor integer not null,
+   ...> FOREIGN KEY (id_purveyor) REFERENCES purveyor(id));
+sqlite> PRAGMA foreign_keys = ON;
+sqlite> 
