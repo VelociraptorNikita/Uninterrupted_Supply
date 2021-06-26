@@ -1,0 +1,5 @@
+simpy
+termcolor
+matplotlib
+numpy
+PySimpleGUI
