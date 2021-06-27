@@ -11,8 +11,9 @@ matplotlib.use('TkAgg')
 fig = matplotlib.figure.Figure(figsize=(6, 5), dpi=100)
 sp = fig.add_subplot(111)
 sp.set_title('Заполнение склада')  # заголовок
-sp.set_xlabel('Время, ч')  # ось абсцисс (вправо)
+sp.set_xlabel('Время, д')  # ось абсцисс (вправо)
 sp.set_ylabel('Заполнение, т')  # ось ординат (вверх)
+sp.grid()
 figure_canvas_agg = None
 
 
@@ -29,12 +30,13 @@ def print_func(string, color='black'):
 
 
 # Главное окно
-window = sg.Window('Uninterrupted supply', [
+sg.theme('Default1')
+window = sg.Window('Бесперебойное снабжение', [
     [sg.Multiline(size=(60, 15), key='LOG ELEMENT', do_not_clear=not DO_CLEAN_WINDOW),
      sg.Canvas(key='-CANVAS-')],
     [sg.Button('Поехали'),
      sg.Button('Настройки'),
-     sg.Button('Выход', button_color=(sg.YELLOWS[0], sg.GREENS[0]))]
+     sg.Button('Выход')]
 ])
 
 settings_active = False
@@ -47,7 +49,7 @@ while True:
     if event == 'Поехали':
         if DO_CLEAN_WINDOW:
             sp.clear()
-        sp.plot(simulation.start(print_func))  # построение графика
+        sp.plot(*simulation.start(print_func))  # построение графика
         sp.axhline(simulation.CHARGE // 1000, color='r', linestyle='--')
         draw_figure(window['-CANVAS-'].TKCanvas)
 

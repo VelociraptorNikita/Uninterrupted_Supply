@@ -1,5 +1,5 @@
 {
-  "Ярославский шинный завод": {"delivery_time": 2, "raw_materials_kg": 6000},
+  "Ярославский шинный завод": {"delivery_time": 2, "raw_materials_kg": 6000, "delivery_periodicity": 2, "discharge_time": 2},
   "Ярославский завод РТИ": {"delivery_time": 2, "raw_materials_kg": 7000},
   "Ярославль — Резинотехника": {"delivery_time": 3, "raw_materials_kg": 3500},
   "ПАТП": {"delivery_time": 1, "raw_materials_kg": 140},
