@@ -34,7 +34,7 @@ sg.theme('Default1')
 window = sg.Window('Бесперебойное снабжение', [
     [sg.Multiline(size=(60, 15), key='LOG ELEMENT', do_not_clear=not DO_CLEAN_WINDOW),
      sg.Canvas(key='-CANVAS-')],
-    [sg.Button('Поехали'),
+    [sg.Button('Запуск'),
      sg.Button('Настройки'),
      sg.Button('Выход')]
 ])
