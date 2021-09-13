@@ -46,7 +46,7 @@ while True:
     if event in (sg.WIN_CLOSED, 'Выход'):
         break
 
-    if event == 'Поехали':
+    if event == 'Запуск':
         if DO_CLEAN_WINDOW:
             sp.clear()
         sp.plot(*simulation.start(print_func))  # построение графика
@@ -70,13 +70,15 @@ while True:
         ]
         window_settings = sg.Window('Настройки', layout_settings)
     if settings_active:
-        event, values = window_settings.read(timeout=100)
-        if event != sg.TIMEOUT_KEY:
-            if event in (sg.WIN_CLOSED, 'Выход'):
-                settings_active = False
-                window_settings.close()
-            if event == 'Сохранить':
-                sg.popup('You entered ', values['-IN-'])
-        # Исполнить
+        while True:
+            event, values = window_settings.read(timeout=100)
+            if event != sg.TIMEOUT_KEY:
+                if event in (sg.WIN_CLOSED, 'Выход'):
+                    settings_active = False
+                    window_settings.close()
+                    break
+                if event == 'Сохранить':
+                    sg.popup('You entered ', values['-IN-'])
+            # Исполнить
 
 window.close()

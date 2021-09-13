@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS purveyance (
     return con
 
 
-def get_data(table: str) -> {}:
+def get_data(table: str) -> dict:
     with open_db() as con:
         cur = con.cursor().execute(f'SELECT * FROM {table}')
         data = [list(line) for line in cur.fetchall()]
