@@ -3,6 +3,7 @@ import matplotlib
 import PySimpleGUI as sg
 import db
 import simulation
+import time
 
 # Настройки
 DO_CLEAN_WINDOW = False
@@ -27,6 +28,7 @@ def draw_figure(canvas):
 
 def print_func(string, color='black'):
     window['LOG ELEMENT'].print(string, text_color=color)
+    #time.sleep(0.03)
 
 
 # Главное окно
