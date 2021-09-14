@@ -32,12 +32,21 @@ def print_func(string, color='black'):
 # Главное окно
 sg.theme('Default1')
 window = sg.Window('Бесперебойное снабжение', [
-    [sg.Multiline(size=(60, 15), key='LOG ELEMENT', do_not_clear=not DO_CLEAN_WINDOW),
-     sg.Canvas(key='-CANVAS-')],
+    [sg.Graph(
+            canvas_size=(800, 400),
+            graph_bottom_left=(0, 0),
+            graph_top_right=(800, 400),
+            key="map"
+        ), sg.Canvas(key='-CANVAS-')],
+    [sg.Multiline(size=(60, 15), key='LOG ELEMENT', do_not_clear=not DO_CLEAN_WINDOW)],
     [sg.Button('Запуск'),
      sg.Button('Настройки'),
      sg.Button('Выход')]
-])
+]).Finalize()
+
+window.Maximize()
+map = window.Element("map")
+map.DrawImage(filename="map_800x400.png", location=(0, 400))
 
 settings_active = False
 while True:
