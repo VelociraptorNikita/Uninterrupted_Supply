@@ -47,6 +47,7 @@ window = sg.Window('Бесперебойное снабжение', [
 window.Maximize()
 map = window.Element("map")
 map.DrawImage(filename="map_800x400.png", location=(0, 400))
+point = map.DrawPoint((75,75), 10, color='Red')
 
 settings_active = False
 while True:
@@ -58,6 +59,7 @@ while True:
     if event == 'Запуск':
         if DO_CLEAN_WINDOW:
             sp.clear()
+        map.TKCanvas.itemconfig(point, fill = "Green")  
         sp.plot(*simulation.start(print_func))  # построение графика
         sp.axhline(simulation.CHARGE // 1000, color='r', linestyle='--')
         draw_figure(window['-CANVAS-'].TKCanvas)
