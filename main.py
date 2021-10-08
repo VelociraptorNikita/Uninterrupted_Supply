@@ -28,6 +28,7 @@ def draw_figure(canvas):
 
 def print_func(string, color='black'):
     window['LOG ELEMENT'].print(string, text_color=color)
+    window.refresh()
     #time.sleep(0.03)
 
 
