@@ -32,6 +32,9 @@ def print_func(string, color='black'):
     window.refresh()
     time.sleep(0.1)
 
+def change_color_point(point, color):
+    map.TKCanvas.itemconfig(point, fill = color)
+    window.refresh()
 
 # Главное окно
 sg.theme('Default1')
@@ -51,7 +54,7 @@ window = sg.Window('Бесперебойное снабжение', [
 window.Maximize()
 map = window.Element("map")
 map.DrawImage(filename="map_800x400.png", location=(0, 400))
-point = map.DrawPoint((75,75), 10, color='Red')
+# point = map.DrawPoint((75,75), 10, color='Red')
 
 settings_active = False
 while True:
@@ -63,15 +66,21 @@ while True:
     if event == 'Запуск':
         if DO_CLEAN_WINDOW:
             sp.clear()
-        map.TKCanvas.itemconfig(point, fill = "Green")  
-        sp.plot(*simulation.start(print_func))  # построение графика
+        # map.TKCanvas.itemconfig(point, fill = "Green")
+        tables_data = db.get_data('purveyor')
+        points_suppliers = dict()
+        for table_data in tables_data['data']:
+            points_suppliers[table_data[1]] = map.DrawPoint((table_data[4], table_data[5]), 10, color='Red')
+        # map.TKCanvas.itemconfig(points_suppliers['test1'], fill = "Green")
+
+        sp.plot(*simulation.start(print_func, change_color_point, points_suppliers))  # построение графика
         sp.axhline(simulation.CHARGE // 1000, color='r', linestyle='--')
         draw_figure(window['-CANVAS-'].TKCanvas)
 
     if event == 'Настройки' and not settings_active:
         settings_active = True
 
-        # массив словарей с полями data и headers   
+        # массив словарей с полями data и headers
         tables_data = db.get_data('purveyor')
 
         layout_settings = [

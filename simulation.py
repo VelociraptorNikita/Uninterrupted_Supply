@@ -91,11 +91,11 @@ def log_data(env: Environment, raw_material: Container, data):
         yield env.timeout(1)
 
 
-def start(print_func):
+def start(print_func, change_color_point, points_suppliers):
     # Переопределяем функцию вывода текста
     global print
     print = print_func
-
+    
     data = []
 
     env = Environment()
