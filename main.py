@@ -37,7 +37,14 @@ def change_color_point(point, color):
     window.refresh()
 
 # Главное окно
-sg.theme('Default1')
+# sg.theme('Dark2')
+# sg.theme('DarkAmber')
+sg.theme('DarkBlue3') # +
+# sg.theme('Default1')
+# sg.theme('Kayak')
+# sg.theme('LightGreen1') # +
+# sg.theme('LightGreen5')
+# sg.theme('LightGrey3')
 window = sg.Window('Бесперебойное снабжение', [
     [sg.Graph(
             canvas_size=(800, 400),
@@ -49,13 +56,12 @@ window = sg.Window('Бесперебойное снабжение', [
     [sg.Button('Запуск'),
      sg.Button('Настройки'),
      sg.Button('Выход')]
-]).Finalize()
-
+]
+, resizable=True).Finalize()
 window.Maximize()
 map = window.Element("map")
 map.DrawImage(filename="map_800x400.png", location=(0, 400))
 # point = map.DrawPoint((75,75), 10, color='Red')
-
 settings_active = False
 while True:
     event, value = window.read()
@@ -100,7 +106,7 @@ while True:
             [sg.Text('x:'), sg.Input(key='-X-', readonly=True), sg.Text('y:'), sg.Input(key='-Y-', readonly=True)],
             [sg.Button('Сохранить'), sg.Button('Очистить'), sg.Button('Выход')]
         ]
-        window_settings = sg.Window('Настройки', layout_settings).Finalize()
+        window_settings = sg.Window('Настройки', layout_settings, resizable=True).Finalize()
         window_settings.maximize()
         map_setting = window_settings.Element("map_setting")
         map_setting.DrawImage(filename="map_800x400.png", location=(0, 400))
