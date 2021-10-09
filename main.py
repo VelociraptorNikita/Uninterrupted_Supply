@@ -1,3 +1,4 @@
+from tkinter import Label
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib
 import PySimpleGUI as sg
@@ -29,7 +30,7 @@ def draw_figure(canvas):
 def print_func(string, color='black'):
     window['LOG ELEMENT'].print(string, text_color=color)
     window.refresh()
-    #time.sleep(0.03)
+    time.sleep(0.1)
 
 
 # Главное окно
@@ -70,19 +71,30 @@ while True:
     if event == 'Настройки' and not settings_active:
         settings_active = True
 
-        # массив словарей с полями data и headers
-        tables_data = [db.get_data(table) for table in ('purveyor', 'purveyance')]
+        # массив словарей с полями data и headers   
+        tables_data = db.get_data('purveyor')
 
         layout_settings = [
-            [sg.Table(values=table_data['data'],
-                      headings=table_data['headers'],
-                      display_row_numbers=True,
+            [sg.Graph(
+            canvas_size=(800, 400),
+            graph_bottom_left=(0, 0),
+            graph_top_right=(800, 400),
+            key="map_setting",
+            enable_events=True)],
+                [sg.Table(values=tables_data['data'],
+                      headings=tables_data['headers'],
+                      display_row_numbers=False,
                       auto_size_columns=False,
-                      num_rows=5) for table_data in tables_data],
-            [sg.Input(key='-IN-')],
-            [sg.Button('Сохранить'), sg.Button('Выход')]
+                      num_rows=20,
+                      key='-TABLE-')],
+            [sg.Text('Название:'), sg.Input(key='-NAME-'), sg.Text('Цена:'), sg.Input(key='-PRICE-'), sg.Text('Время доставки:'), sg.Input(key='-TIME-')],
+            [sg.Text('x:'), sg.Input(key='-X-', readonly=True), sg.Text('y:'), sg.Input(key='-Y-', readonly=True)],
+            [sg.Button('Сохранить'), sg.Button('Очистить'), sg.Button('Выход')]
         ]
-        window_settings = sg.Window('Настройки', layout_settings)
+        window_settings = sg.Window('Настройки', layout_settings).Finalize()
+        window_settings.maximize()
+        map_setting = window_settings.Element("map_setting")
+        map_setting.DrawImage(filename="map_800x400.png", location=(0, 400))
     if settings_active:
         while True:
             event, values = window_settings.read(timeout=100)
@@ -91,8 +103,17 @@ while True:
                     settings_active = False
                     window_settings.close()
                     break
+                if event == 'map_setting':
+                    window_settings['-X-'].update(value=values[event][0])
+                    window_settings['-Y-'].update(value=values[event][1])
                 if event == 'Сохранить':
-                    sg.popup('You entered ', values['-IN-'])
+                    id = tables_data['data'][-1][0] + 1 if len(tables_data['data']) > 0 else 1
+                    if values['-X-'] != '' and values['-Y-'] != '':
+                        db.set_data('purveyor', [id, values['-NAME-'], values['-PRICE-'], values['-TIME-'], values['-X-'], values['-Y-']])
+                        tables_data = db.get_data('purveyor')
+                        window_settings['-TABLE-'].update(values=tables_data['data'])
+                if event == 'Очистить':
+                    db.clear('purveyor')
             # Исполнить
 
 window.close()
