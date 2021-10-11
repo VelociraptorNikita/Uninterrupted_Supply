@@ -15,6 +15,7 @@ BREAKAGE_REPAIR_TIME = 8  # Время починки, часы
 DEFAULT_DELIVERY_PERIODICITY = 7  # Периодичность отправки фур по умолчанию, дни
 DEFAULT_DISCHARGE_TIME = 3  # Время разгрузки фур по умолчанию, часы
 
+
 # Подгрузка файлов с данными и глобальные переменные времени исполнения
 with open('suppliers.json', encoding='utf8') as f:
     suppliers = json.load(f)
@@ -91,12 +92,13 @@ def log_data(env: Environment, raw_material: Container, data):
         yield env.timeout(1)
 
 
-def start(print_func, change_color_point, points_suppliers):
+def start(print_func, suppliers_data, change_color_point, points_suppliers):
     # Переопределяем функцию вывода текста
     global print
     print = print_func
     
     data = []
+    
 
     env = Environment()
     reactor = Resource(env, 1)

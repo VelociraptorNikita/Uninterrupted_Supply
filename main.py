@@ -79,7 +79,7 @@ while True:
             points_suppliers[table_data[1]] = map.DrawPoint((table_data[7], table_data[8]), 10, color='Red')
         # map.TKCanvas.itemconfig(points_suppliers['test1'], fill = "Green")
 
-        sp.plot(*simulation.start(print_func, change_color_point, points_suppliers))  # построение графика
+        sp.plot(*simulation.start(print_func, tables_data['data'], change_color_point, points_suppliers))  # построение графика
         sp.axhline(simulation.CHARGE // 1000, color='r', linestyle='--')
         draw_figure(window['-CANVAS-'].TKCanvas)
 
