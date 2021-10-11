@@ -76,7 +76,7 @@ while True:
         tables_data = db.get_data('purveyor')
         points_suppliers = dict()
         for table_data in tables_data['data']:
-            points_suppliers[table_data[1]] = map.DrawPoint((table_data[4], table_data[5]), 10, color='Red')
+            points_suppliers[table_data[1]] = map.DrawPoint((table_data[7], table_data[8]), 10, color='Red')
         # map.TKCanvas.itemconfig(points_suppliers['test1'], fill = "Green")
 
         sp.plot(*simulation.start(print_func, change_color_point, points_suppliers))  # построение графика
@@ -100,9 +100,10 @@ while True:
                       headings=tables_data['headers'],
                       display_row_numbers=False,
                       auto_size_columns=False,
-                      num_rows=20,
+                      num_rows=10,
                       key='-TABLE-')],
             [sg.Text('Название:'), sg.Input(key='-NAME-'), sg.Text('Цена:'), sg.Input(key='-PRICE-'), sg.Text('Время доставки:'), sg.Input(key='-TIME-')],
+            [sg.Text('Размер поставок:'), sg.Input(key='-MATERIAL-'), sg.Text('Периодичность:'), sg.Input(key='-PERIODICIITY-'), sg.Text('Время разгрузки:'), sg.Input(key='-DISCHARGE-')],
             [sg.Text('x:'), sg.Input(key='-X-', readonly=True), sg.Text('y:'), sg.Input(key='-Y-', readonly=True)],
             [sg.Button('Сохранить'), sg.Button('Очистить'), sg.Button('Выход')]
         ]
@@ -124,7 +125,8 @@ while True:
                 if event == 'Сохранить':
                     id = tables_data['data'][-1][0] + 1 if len(tables_data['data']) > 0 else 1
                     if values['-X-'] != '' and values['-Y-'] != '':
-                        db.set_data('purveyor', [id, values['-NAME-'], values['-PRICE-'], values['-TIME-'], values['-X-'], values['-Y-']])
+                        db.set_data('purveyor', [id, values['-NAME-'], values['-PRICE-'], values['-TIME-'], 
+                        values['-MATERIAL-'], values['-PERIODICIITY-'], values['-DISCHARGE-'], values['-X-'], values['-Y-']])
                         tables_data = db.get_data('purveyor')
                         window_settings['-TABLE-'].update(values=tables_data['data'])
                 if event == 'Очистить':

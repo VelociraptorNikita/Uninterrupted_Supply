@@ -10,6 +10,9 @@ CREATE TABLE IF NOT EXISTS purveyor (
     name  TEXT    NOT NULL,
     price REAL,
     time  TEXT,
+    material INTEGER,
+    periodicity INTEGER,
+    discharge INTEGER,
     x     INTEGER,
     y     INTEGER
 );
