@@ -131,6 +131,5 @@ while True:
                         window_settings['-TABLE-'].update(values=tables_data['data'])
                 if event == 'Очистить':
                     db.clear('purveyor')
-            # Исполнить
 
 window.close()

@@ -15,16 +15,16 @@ BREAKAGE_REPAIR_TIME = 8  # Время починки, часы
 DEFAULT_DELIVERY_PERIODICITY = 7  # Периодичность отправки фур по умолчанию, дни
 DEFAULT_DISCHARGE_TIME = 3  # Время разгрузки фур по умолчанию, часы
 
-
+suppliers = dict()
 # Подгрузка файлов с данными и глобальные переменные времени исполнения
-with open('suppliers.json', encoding='utf8') as f:
-    suppliers = json.load(f)
-    for supplier_name in suppliers:
-        supplier = suppliers[supplier_name]
-        if 'delivery_periodicity' not in supplier:
-            supplier['delivery_periodicity'] = DEFAULT_DELIVERY_PERIODICITY
-        if 'discharge_time' not in supplier:
-            supplier['discharge_time'] = DEFAULT_DISCHARGE_TIME
+# with open('suppliers.json', encoding='utf8') as f:
+#     suppliers = json.load(f)
+#     for supplier_name in suppliers:
+#         supplier = suppliers[supplier_name]
+#         if 'delivery_periodicity' not in supplier:
+#             supplier['delivery_periodicity'] = DEFAULT_DELIVERY_PERIODICITY
+#         if 'discharge_time' not in supplier:
+#             supplier['discharge_time'] = DEFAULT_DISCHARGE_TIME
 idle_hours = 0
 count_break = 0
 
@@ -92,13 +92,15 @@ def log_data(env: Environment, raw_material: Container, data):
         yield env.timeout(1)
 
 
-def start(print_func, suppliers_data, change_color_point, points_suppliers):
+def start(print_func, suppliers_data_raw, change_color_point, points_suppliers):
     # Переопределяем функцию вывода текста
     global print
     print = print_func
     
     data = []
-    
+    global suppliers
+    for supplier in suppliers_data_raw:
+        suppliers[supplier[1]] = {"delivery_time": int(supplier[3]), "raw_materials_kg": int(supplier[4]), "delivery_periodicity": int(supplier[5]), "discharge_time": int(supplier[6]) }
 
     env = Environment()
     reactor = Resource(env, 1)
