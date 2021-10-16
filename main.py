@@ -144,11 +144,14 @@ while True:
                 if event == 'Сохранить':
                     if values['-ID-'] == '':
                         id = tables_data['data'][-1][0] + 1 if len(tables_data['data']) > 0 else 1
-                        if values['-X-'] != '' and values['-Y-'] != '':
+                        if values['-X-'] != '' and values['-Y-'] != '' and values['-NAME-'] != '' and values['-PRICE-'] != '' and values['-TIME-'] != ''\
+                                and values['-MATERIAL-'] != '' and values['-PERIODICIITY-'] != '' and values['-DISCHARGE-'] != '':
                             db.set_data('purveyor', [id, values['-NAME-'], values['-PRICE-'], values['-TIME-'],
                             values['-MATERIAL-'], values['-PERIODICIITY-'], values['-DISCHARGE-'], values['-X-'], values['-Y-']])
                             tables_data = db.get_data('purveyor')
                             window_settings['-TABLE-'].update(values=tables_data['data'])
+                        else:
+                            sg.popup_error('Внимание! Не заполнены все поля.')
                     else:
                         if sg.popup_ok_cancel(f'Вы точно хотите изменить запись с id {values["-ID-"]}?') == 'OK':
                             db.update_date('purveyor', values['-ID-'], [values['-NAME-'], values['-PRICE-'], values['-TIME-'],

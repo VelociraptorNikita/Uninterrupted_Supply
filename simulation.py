@@ -11,9 +11,7 @@ PYROLYSIS_CYCLE = 24  # Часы
 # Поломка реактора
 BREAKAGE_PROBABILITY = .2  # Вероятность поломки, часть от 1
 BREAKAGE_REPAIR_TIME = 8  # Время починки, часы
-# Умолчания для поставщиков
-DEFAULT_DELIVERY_PERIODICITY = 7  # Периодичность отправки фур по умолчанию, дни
-DEFAULT_DISCHARGE_TIME = 3  # Время разгрузки фур по умолчанию, часы
+
 
 suppliers = dict()
 # Подгрузка файлов с данными и глобальные переменные времени исполнения
@@ -102,24 +100,8 @@ def start(print_func, suppliers_data_raw, change_color_point, points_suppliers):
     data = []
     global suppliers
     for supplier in suppliers_data_raw:
-        try:
-            delivery_time = int(supplier[3])
-        except:
-            delivery_time = 2
-        try:
-            raw_materials_kg = int(supplier[4])
-        except:
-            raw_materials_kg = 100
-        try:
-            delivery_periodicity = int(supplier[5])
-        except:
-            delivery_periodicity = DEFAULT_DELIVERY_PERIODICITY
-        try:
-            discharge_time = int(supplier[6])
-        except:
-            discharge_time = DEFAULT_DISCHARGE_TIME
-        suppliers[supplier[1]] = {"delivery_time": delivery_time, "raw_materials_kg": raw_materials_kg,
-                                  "delivery_periodicity": delivery_periodicity, "discharge_time": discharge_time}
+        suppliers[supplier[1]] = {"delivery_time": int(supplier[3]), "raw_materials_kg": int(supplier[4]),
+                                  "delivery_periodicity": int(supplier[5]), "discharge_time": int(supplier[6])}
     env = Environment()
     reactor = Resource(env, 1)
     raw_material = Container(env, RAW_MATERIAL_WAREHOUSE, init=50000)
