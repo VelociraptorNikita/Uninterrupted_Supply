@@ -50,7 +50,7 @@ window = sg.Window('Бесперебойное снабжение', [
             canvas_size=(800, 400),
             graph_bottom_left=(0, 0),
             graph_top_right=(800, 400),
-            key="map"
+            key="-MAP-"
         ), sg.Canvas(key='-CANVAS-')],
     [sg.Multiline(size=(60, 15), key='LOG ELEMENT', do_not_clear=not DO_CLEAN_WINDOW)],
     [sg.Button('Запуск'),
@@ -59,7 +59,7 @@ window = sg.Window('Бесперебойное снабжение', [
 ]
 , resizable=True).Finalize()
 window.Maximize()
-map = window.Element("map")
+map = window.Element("-MAP-")
 map.DrawImage(filename="map_800x400.png", location=(0, 400))
 # point = map.DrawPoint((75,75), 10, color='Red')
 settings_active = False
@@ -94,7 +94,7 @@ while True:
             canvas_size=(800, 400),
             graph_bottom_left=(0, 0),
             graph_top_right=(800, 400),
-            key="map_setting",
+            key="-MAP_SETTING-",
             enable_events=True)],
                 [sg.Table(values=tables_data['data'],
                       headings=tables_data['headers'],
@@ -109,7 +109,7 @@ while True:
         ]
         window_settings = sg.Window('Настройки', layout_settings, resizable=True).Finalize()
         window_settings.maximize()
-        map_setting = window_settings.Element("map_setting")
+        map_setting = window_settings.Element("-MAP_SETTING-")
         map_setting.DrawImage(filename="map_800x400.png", location=(0, 400))
     if settings_active:
         while True:
@@ -119,7 +119,7 @@ while True:
                     settings_active = False
                     window_settings.close()
                     break
-                if event == 'map_setting':
+                if event == '-MAP_SETTING-':
                     window_settings['-X-'].update(value=values[event][0])
                     window_settings['-Y-'].update(value=values[event][1])
                 if event == 'Сохранить':
