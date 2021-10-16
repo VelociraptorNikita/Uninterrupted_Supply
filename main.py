@@ -112,7 +112,6 @@ while True:
     if settings_active:
         while True:
             event, values = window_settings.read(timeout=100)
-            print(event, values)
             if event != sg.TIMEOUT_KEY:
                 if event in (sg.WIN_CLOSED, 'Выход'):
                     settings_active = False
