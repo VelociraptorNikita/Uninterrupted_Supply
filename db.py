@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS purveyor (
 );
 ''')
     con.commit()
-    # 
     return con
 
 
@@ -40,4 +39,3 @@ def set_data(table: str, data: list) -> None:
         column_count = len(data)
         cur.execute(f'INSERT INTO {table} VALUES (?{", ?" * (column_count - 1)})', data)
         con.commit()
-        # cur.execute(f'INSERT INTO {table} VALUES (?{", ?" * (column_count - 1)})', line)

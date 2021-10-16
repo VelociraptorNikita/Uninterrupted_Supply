@@ -1,4 +1,5 @@
 from tkinter import Label
+from PySimpleGUI.PySimpleGUI import Exit
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib
 import PySimpleGUI as sg
@@ -55,13 +56,12 @@ window = sg.Window('Бесперебойное снабжение', [
     [sg.Multiline(size=(60, 15), key='LOG ELEMENT', do_not_clear=not DO_CLEAN_WINDOW)],
     [sg.Button('Запуск'),
      sg.Button('Настройки'),
-     sg.Button('Выход')]
-]
-, resizable=True).Finalize()
+    sg.CloseButton('Выход')]
+],
+resizable=True, finalize=True)
 window.Maximize()
 map = window.Element("-MAP-")
 map.DrawImage(filename="map_800x400.png", location=(0, 400))
-# point = map.DrawPoint((75,75), 10, color='Red')
 settings_active = False
 while True:
     event, value = window.read()
@@ -72,12 +72,10 @@ while True:
     if event == 'Запуск':
         if DO_CLEAN_WINDOW:
             sp.clear()
-        # map.TKCanvas.itemconfig(point, fill = "Green")
         tables_data = db.get_data('purveyor')
         points_suppliers = dict()
         for table_data in tables_data['data']:
             points_suppliers[table_data[1]] = map.DrawPoint((table_data[7], table_data[8]), 10, color='Red')
-        # map.TKCanvas.itemconfig(points_suppliers['test1'], fill = "Green")
 
         sp.plot(*simulation.start(print_func, tables_data['data'], change_color_point, points_suppliers))  # построение графика
         sp.axhline(simulation.CHARGE // 1000, color='r', linestyle='--')
@@ -105,9 +103,11 @@ while True:
             [sg.Text('Название:'), sg.Input(key='-NAME-'), sg.Text('Цена:'), sg.Input(key='-PRICE-'), sg.Text('Время доставки:'), sg.Input(key='-TIME-')],
             [sg.Text('Размер поставок:'), sg.Input(key='-MATERIAL-'), sg.Text('Периодичность:'), sg.Input(key='-PERIODICIITY-'), sg.Text('Время разгрузки:'), sg.Input(key='-DISCHARGE-')],
             [sg.Text('x:'), sg.Input(key='-X-', readonly=True), sg.Text('y:'), sg.Input(key='-Y-', readonly=True)],
-            [sg.Button('Сохранить'), sg.Button('Очистить'), sg.Button('Выход')]
+            [sg.Button('Сохранить'), 
+            # sg.Button('Очистить'), 
+            sg.CloseButton('Выход')]
         ]
-        window_settings = sg.Window('Настройки', layout_settings, resizable=True).Finalize()
+        window_settings = sg.Window('Настройки', layout_settings, resizable=True, finalize=True)
         window_settings.maximize()
         map_setting = window_settings.Element("-MAP_SETTING-")
         map_setting.DrawImage(filename="map_800x400.png", location=(0, 400))
