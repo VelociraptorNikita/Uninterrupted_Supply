@@ -31,7 +31,7 @@ def draw_figure(canvas):
 def print_func(string, color='black'):
     window['LOG ELEMENT'].print(string, text_color=color)
     window.refresh()
-    time.sleep(0.1)
+    # time.sleep(0.1)
 
 def change_color_point(point, color):
     map.TKCanvas.itemconfig(point, fill = color)
@@ -99,13 +99,11 @@ while True:
                       display_row_numbers=False,
                       auto_size_columns=False,
                       num_rows=10,
-                      key='-TABLE-')],
+                      key='-TABLE-', enable_events=True)],
             [sg.Text('Название:'), sg.Input(key='-NAME-'), sg.Text('Цена:'), sg.Input(key='-PRICE-'), sg.Text('Время доставки:'), sg.Input(key='-TIME-')],
             [sg.Text('Размер поставок:'), sg.Input(key='-MATERIAL-'), sg.Text('Периодичность:'), sg.Input(key='-PERIODICIITY-'), sg.Text('Время разгрузки:'), sg.Input(key='-DISCHARGE-')],
-            [sg.Text('x:'), sg.Input(key='-X-', readonly=True), sg.Text('y:'), sg.Input(key='-Y-', readonly=True)],
-            [sg.Button('Сохранить'), 
-            # sg.Button('Очистить'), 
-            sg.CloseButton('Выход')]
+            [sg.Text('x:'), sg.Input(key='-X-', readonly=True), sg.Text('y:'), sg.Input(key='-Y-', readonly=True), sg.Text('id:'), sg.Input(key='-ID-', readonly=True)],
+            [sg.Button('Сохранить'), sg.Button('Удалить'), sg.Button('Очистить'), sg.CloseButton('Выход')]
         ]
         window_settings = sg.Window('Настройки', layout_settings, resizable=True, finalize=True)
         window_settings.maximize()
@@ -114,22 +112,51 @@ while True:
     if settings_active:
         while True:
             event, values = window_settings.read(timeout=100)
+            print(event, values)
             if event != sg.TIMEOUT_KEY:
                 if event in (sg.WIN_CLOSED, 'Выход'):
                     settings_active = False
                     window_settings.close()
                     break
+                if event == 'Очистить':
+                    window_settings['-NAME-'].update('')
+                    window_settings['-PRICE-'].update('')
+                    window_settings['-TIME-'].update('')
+                    window_settings['-MATERIAL-'].update('')
+                    window_settings['-PERIODICIITY-'].update('')
+                    window_settings['-DISCHARGE-'].update('')
+                    window_settings['-X-'].update('')
+                    window_settings['-Y-'].update('')
+                    window_settings['-ID-'].update('')
+                if event == '-TABLE-':
+                    window_settings['-NAME-'].update(tables_data['data'][values['-TABLE-'][0]][1])
+                    window_settings['-PRICE-'].update(tables_data['data'][values['-TABLE-'][0]][2])
+                    window_settings['-TIME-'].update(tables_data['data'][values['-TABLE-'][0]][3])
+                    window_settings['-MATERIAL-'].update(tables_data['data'][values['-TABLE-'][0]][4])
+                    window_settings['-PERIODICIITY-'].update(tables_data['data'][values['-TABLE-'][0]][5])
+                    window_settings['-DISCHARGE-'].update(tables_data['data'][values['-TABLE-'][0]][6])
+                    window_settings['-X-'].update(tables_data['data'][values['-TABLE-'][0]][7])
+                    window_settings['-Y-'].update(tables_data['data'][values['-TABLE-'][0]][8])
+                    window_settings['-ID-'].update(tables_data['data'][values['-TABLE-'][0]][0])
                 if event == '-MAP_SETTING-':
                     window_settings['-X-'].update(value=values[event][0])
                     window_settings['-Y-'].update(value=values[event][1])
                 if event == 'Сохранить':
-                    id = tables_data['data'][-1][0] + 1 if len(tables_data['data']) > 0 else 1
-                    if values['-X-'] != '' and values['-Y-'] != '':
-                        db.set_data('purveyor', [id, values['-NAME-'], values['-PRICE-'], values['-TIME-'], 
-                        values['-MATERIAL-'], values['-PERIODICIITY-'], values['-DISCHARGE-'], values['-X-'], values['-Y-']])
+                    if values['-ID-'] == '':
+                        id = tables_data['data'][-1][0] + 1 if len(tables_data['data']) > 0 else 1
+                        if values['-X-'] != '' and values['-Y-'] != '':
+                            db.set_data('purveyor', [id, values['-NAME-'], values['-PRICE-'], values['-TIME-'],
+                            values['-MATERIAL-'], values['-PERIODICIITY-'], values['-DISCHARGE-'], values['-X-'], values['-Y-']])
+                            tables_data = db.get_data('purveyor')
+                            window_settings['-TABLE-'].update(values=tables_data['data'])
+                    else:
+                        db.update_date('purveyor', values['-ID-'], [values['-NAME-'], values['-PRICE-'], values['-TIME-'],
+                            values['-MATERIAL-'], values['-PERIODICIITY-'], values['-DISCHARGE-'], values['-X-'], values['-Y-']])
                         tables_data = db.get_data('purveyor')
                         window_settings['-TABLE-'].update(values=tables_data['data'])
-                if event == 'Очистить':
-                    db.clear('purveyor')
+                if event == 'Удалить' and values['-ID-'] != '':
+                    db.delete('purveyor', values['-ID-'])
+                    tables_data = db.get_data('purveyor')
+                    window_settings['-TABLE-'].update(values=tables_data['data'])
 
 window.close()

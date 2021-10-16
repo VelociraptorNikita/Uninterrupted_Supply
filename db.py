@@ -28,9 +28,17 @@ def get_data(table: str) -> dict:
         headers = list(next(zip(*cur.description)))
         return {'headers': headers, 'data': data}
 
-def clear(table: str) -> None:
+def update_date(table: str, id: str, data: list):
     with open_db() as con:
-        cur = con.cursor().execute(f'DELETE FROM {table}')
+        cur = con.cursor()
+        column_count = len(data)
+        cur.execute(f'UPDATE {table} SET (name, price, time, material, periodicity, discharge, x, y) = (?{", ?" * (column_count - 1)}) WHERE id = {id}', data)
+        con.commit()
+
+def delete(table: str, id: str) -> None:
+    with open_db() as con:
+        cur = con.cursor().execute(f'DELETE FROM {table} WHERE ID = {id}')
+        con.commit()
  
 
 def set_data(table: str, data: list) -> None:
