@@ -150,13 +150,15 @@ while True:
                             tables_data = db.get_data('purveyor')
                             window_settings['-TABLE-'].update(values=tables_data['data'])
                     else:
-                        db.update_date('purveyor', values['-ID-'], [values['-NAME-'], values['-PRICE-'], values['-TIME-'],
-                            values['-MATERIAL-'], values['-PERIODICIITY-'], values['-DISCHARGE-'], values['-X-'], values['-Y-']])
+                        if sg.popup_ok_cancel(f'Вы точно хотите изменить запись с id {values["-ID-"]}?') == 'OK':
+                            db.update_date('purveyor', values['-ID-'], [values['-NAME-'], values['-PRICE-'], values['-TIME-'],
+                                values['-MATERIAL-'], values['-PERIODICIITY-'], values['-DISCHARGE-'], values['-X-'], values['-Y-']])
+                            tables_data = db.get_data('purveyor')
+                            window_settings['-TABLE-'].update(values=tables_data['data'])
+                if event == 'Удалить' and values['-ID-'] != '':
+                    if sg.popup_ok_cancel(f'Вы точно хотите удалить запись с id {values["-ID-"]}?') == 'OK':
+                        db.delete('purveyor', values['-ID-'])
                         tables_data = db.get_data('purveyor')
                         window_settings['-TABLE-'].update(values=tables_data['data'])
-                if event == 'Удалить' and values['-ID-'] != '':
-                    db.delete('purveyor', values['-ID-'])
-                    tables_data = db.get_data('purveyor')
-                    window_settings['-TABLE-'].update(values=tables_data['data'])
 
 window.close()
