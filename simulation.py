@@ -11,19 +11,18 @@ PYROLYSIS_CYCLE = 24  # Часы
 # Поломка реактора
 BREAKAGE_PROBABILITY = .2  # Вероятность поломки, часть от 1
 BREAKAGE_REPAIR_TIME = 8  # Время починки, часы
-# Умолчания для поставщиков
-DEFAULT_DELIVERY_PERIODICITY = 7  # Периодичность отправки фур по умолчанию, дни
-DEFAULT_DISCHARGE_TIME = 3  # Время разгрузки фур по умолчанию, часы
 
+
+suppliers = dict()
 # Подгрузка файлов с данными и глобальные переменные времени исполнения
-with open('suppliers.json', encoding='utf8') as f:
-    suppliers = json.load(f)
-    for supplier_name in suppliers:
-        supplier = suppliers[supplier_name]
-        if 'delivery_periodicity' not in supplier:
-            supplier['delivery_periodicity'] = DEFAULT_DELIVERY_PERIODICITY
-        if 'discharge_time' not in supplier:
-            supplier['discharge_time'] = DEFAULT_DISCHARGE_TIME
+# with open('suppliers.json', encoding='utf8') as f:
+#     suppliers = json.load(f)
+#     for supplier_name in suppliers:
+#         supplier = suppliers[supplier_name]
+#         if 'delivery_periodicity' not in supplier:
+#             supplier['delivery_periodicity'] = DEFAULT_DELIVERY_PERIODICITY
+#         if 'discharge_time' not in supplier:
+#             supplier['discharge_time'] = DEFAULT_DISCHARGE_TIME
 idle_hours = 0
 count_break = 0
 
@@ -60,7 +59,7 @@ def reactor_cycle(env: Environment, raw_material: Container):
             yield env.timeout(1)
 
 
-def raw_material_control(env: Environment, raw_material: Container):
+def raw_material_control(env: Environment, raw_material: Container, points_suppliers: dict, change_color_point):
     """Вызываем фуры по графику поставок"""
     while True:
         day = env.now // 24
@@ -70,9 +69,11 @@ def raw_material_control(env: Environment, raw_material: Container):
             discharge_time = supplier['discharge_time']
 
             if 0 == day % delivery_periodicity:
+                change_color_point(points_suppliers[supplier_name], 'Green')
                 print(f'{tf(env.now)}Вызываем фуру из "{supplier_name}"')
                 yield env.process(truck(env, raw_material, supplier_name))
                 yield env.timeout(discharge_time)
+                change_color_point(points_suppliers[supplier_name], 'Red')
                 print(f'{tf(env.now)}На складе {raw_material.level / 1000} тонн')
         yield env.timeout(24)  # Проверять каждые сутки
 
@@ -91,18 +92,21 @@ def log_data(env: Environment, raw_material: Container, data):
         yield env.timeout(1)
 
 
-def start(print_func):
+def start(print_func, suppliers_data_raw, change_color_point, points_suppliers):
     # Переопределяем функцию вывода текста
     global print
     print = print_func
-
+    
     data = []
-
+    global suppliers
+    for supplier in suppliers_data_raw:
+        suppliers[supplier[1]] = {"delivery_time": int(supplier[3]), "raw_materials_kg": int(supplier[4]),
+                                  "delivery_periodicity": int(supplier[5]), "discharge_time": int(supplier[6])}
     env = Environment()
     reactor = Resource(env, 1)
     raw_material = Container(env, RAW_MATERIAL_WAREHOUSE, init=50000)
     env.process(log_data(env, raw_material, data))
-    env.process(raw_material_control(env, raw_material))
+    env.process(raw_material_control(env, raw_material, points_suppliers, change_color_point))
     env.process(reactor_cycle(env, raw_material))
     env.run(until=SIM_TIME)
     print(f'Часов простоя: {idle_hours}')
