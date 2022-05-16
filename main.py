@@ -125,19 +125,16 @@ while True:
                     window_settings['-X-'].update('')
                     window_settings['-Y-'].update('')
                     window_settings['-ID-'].update('')
-                if event == '-TABLE-':
-                    try:
-                        window_settings['-NAME-'].update(tables_data['data'][values['-TABLE-'][0]][1])
-                        window_settings['-PRICE-'].update(tables_data['data'][values['-TABLE-'][0]][2])
-                        window_settings['-TIME-'].update(tables_data['data'][values['-TABLE-'][0]][3])
-                        window_settings['-MATERIAL-'].update(tables_data['data'][values['-TABLE-'][0]][4])
-                        window_settings['-PERIODICIITY-'].update(tables_data['data'][values['-TABLE-'][0]][5])
-                        window_settings['-DISCHARGE-'].update(tables_data['data'][values['-TABLE-'][0]][6])
-                        window_settings['-X-'].update(tables_data['data'][values['-TABLE-'][0]][7])
-                        window_settings['-Y-'].update(tables_data['data'][values['-TABLE-'][0]][8])
-                        window_settings['-ID-'].update(tables_data['data'][values['-TABLE-'][0]][0])
-                    except:
-                        continue
+                if event == '-TABLE-' and values['-TABLE-']:
+                    window_settings['-NAME-'].update(tables_data['data'][values['-TABLE-'][0]][1])
+                    window_settings['-PRICE-'].update(tables_data['data'][values['-TABLE-'][0]][2])
+                    window_settings['-TIME-'].update(tables_data['data'][values['-TABLE-'][0]][3])
+                    window_settings['-MATERIAL-'].update(tables_data['data'][values['-TABLE-'][0]][4])
+                    window_settings['-PERIODICIITY-'].update(tables_data['data'][values['-TABLE-'][0]][5])
+                    window_settings['-DISCHARGE-'].update(tables_data['data'][values['-TABLE-'][0]][6])
+                    window_settings['-X-'].update(tables_data['data'][values['-TABLE-'][0]][7])
+                    window_settings['-Y-'].update(tables_data['data'][values['-TABLE-'][0]][8])
+                    window_settings['-ID-'].update(tables_data['data'][values['-TABLE-'][0]][0])
                 if event == '-MAP_SETTING-':
                     window_settings['-X-'].update(value=values[event][0])
                     window_settings['-Y-'].update(value=values[event][1])
